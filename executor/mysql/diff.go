@@ -34,6 +34,16 @@ func hasValue(tag, attr string) bool {
 }
 
 func diffValue(a, b reflect.Value) (fields []string, diff bool) {
+	if a.Kind() == reflect.Pointer && b.Kind() == reflect.Pointer {
+		if a.IsNil() && !b.IsNil() {
+			diff = true // a 为 nil，b 不为 nil
+			return
+		}
+		if !a.IsNil() && b.IsNil() {
+			diff = true // a 不为 nil，b 为 nil
+			return
+		}
+	}
 	a, b = reflect.Indirect(a), reflect.Indirect(b)
 	if !a.IsValid() || !b.IsValid() {
 		if a.IsValid() {
