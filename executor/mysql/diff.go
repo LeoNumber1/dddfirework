@@ -80,10 +80,9 @@ func diffStruct(currVal, prevVal reflect.Value) []string {
 		field := poType.Field(i)
 		fieldVal := currVal.Field(i)
 		prevFiledVal := prevVal.Field(i)
-		fieldVal, prevFiledVal = reflect.Indirect(fieldVal), reflect.Indirect(prevFiledVal)
 		fieldName := field.Name
 		fieldTag := field.Tag.Get("gorm")
-		if fieldVal.Kind() == reflect.Struct {
+		if reflect.Indirect(fieldVal).Kind() == reflect.Struct {
 			if structDiff, diff := diffValue(fieldVal, prevFiledVal); diff {
 				if field.Anonymous || hasValue(fieldTag, "embedded") {
 					result = append(result, structDiff...)
